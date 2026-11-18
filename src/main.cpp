@@ -15,7 +15,7 @@ int main() {
 }
 */
 
-
+/*
 // main.cpp —— M4 阶段：测试 Publisher / Subscriber
 #include <iostream>
 #include "Publisher.h"
@@ -40,6 +40,34 @@ int main() {
     pub.shutdown();
     sub1.shutdown();
     sub2.shutdown();
+
+    return 0;
+}
+*/
+
+// main.cpp —— M5 阶段：完整链路测试（发布 -> RosCore 转发 -> 订阅者收到）
+#include <iostream>
+#include "Publisher.h"
+#include "Subscriber.h"
+#include "RosCore.h"
+
+using namespace std;
+
+int main() {
+    Publisher pub("pub1", "/chatter");
+    Subscriber sub1("sub1", "/chatter");
+    Subscriber sub2("sub2", "/chatter");
+
+    pub.init();
+    sub1.init();
+    sub2.init();
+
+    cout << "--------- 发布消息 ---------" << endl;
+    pub.publish("hello 1");
+    pub.publish("hello 2");
+
+    cout << "--------- 统一关闭 ---------" << endl;
+    RosCore::getInstance()->shutdownAll();   // 一句话关掉所有节点，不再挨个 shutdown
 
     return 0;
 }
