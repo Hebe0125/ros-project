@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 640" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="inh" markerWidth="16" markerHeight="16" refX="13" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1,1 L13,6 L1,11 Z" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    </marker>
+    <marker id="call" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1,1 L11,5 L1,9" fill="none" stroke="#d97706" stroke-width="2"/>
+    </marker>
+  </defs>
+
+  <rect width="810" height="640" fill="#ffffff"/>
+  <text x="405" y="24" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">mini ROS 发布/订阅系统 类图</text>
+
+  <!-- Message -->
+  <rect x="30" y="40" width="230" height="120" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="145" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Message</text>
+  <line x1="30" y1="72" x2="260" y2="72" stroke="#333"/>
+  <text x="40" y="90" font-size="12" fill="#333">- content : string</text>
+  <text x="40" y="108" font-size="12" fill="#333">- timestamp : string</text>
+  <text x="40" y="126" font-size="12" fill="#333">+ getContent() : string</text>
+  <text x="40" y="144" font-size="12" fill="#333">+ getTimeStamp() : string</text>
+
+  <!-- Node -->
+  <rect x="300" y="40" width="220" height="160" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="60" text-anchor="middle" font-size="12" fill="#666">&lt;&lt;abstract&gt;&gt;</text>
+  <text x="410" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Node</text>
+  <line x1="300" y1="86" x2="520" y2="86" stroke="#333"/>
+  <text x="310" y="104" font-size="12" fill="#333"># name : string</text>
+  <text x="310" y="122" font-size="12" fill="#333">+ getName() : string</text>
+  <text x="310" y="140" font-size="12" fill="#333">+ init() = 0（纯虚函数）</text>
+  <text x="310" y="158" font-size="12" fill="#333">+ shutdown() = 0（纯虚函数）</text>
+
+  <!-- RosCore -->
+  <rect x="300" y="270" width="220" height="160" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="290" text-anchor="middle" font-size="12" fill="#666">&lt;&lt;singleton&gt;&gt;</text>
+  <text x="410" y="308" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">RosCore</text>
+  <line x1="300" y1="316" x2="520" y2="316" stroke="#333"/>
+  <text x="310" y="334" font-size="10" fill="#333">- static instance : RosCore*</text>
+  <text x="310" y="348" font-size="10" fill="#333">- topic_subs : map&lt;string,</text>
+  <text x="324" y="362" font-size="10" fill="#333">vector&lt;Subscriber*&gt;&gt;</text>
+  <text x="310" y="376" font-size="10" fill="#333">+ getInstance() : RosCore*</text>
+  <text x="310" y="390" font-size="10" fill="#333">+ registerSubscriber(topic, s)</text>
+  <text x="310" y="404" font-size="10" fill="#333">+ sendMessage(topic, msg)</text>
+  <text x="310" y="418" font-size="10" fill="#333">+ shutdownAll()</text>
+
+  <!-- Publisher -->
+  <rect x="30" y="480" width="230" height="120" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="145" y="502" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Publisher</text>
+  <line x1="30" y1="512" x2="260" y2="512" stroke="#333"/>
+  <text x="40" y="530" font-size="12" fill="#333">- topic : string</text>
+  <text x="40" y="548" font-size="12" fill="#333">+ init()</text>
+  <text x="40" y="566" font-size="12" fill="#333">+ shutdown()</text>
+  <text x="40" y="584" font-size="12" fill="#333">+ publish(string)</text>
+
+  <!-- main -->
+  <rect x="300" y="480" width="220" height="120" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="502" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">main.cpp</text>
+  <line x1="300" y1="512" x2="520" y2="512" stroke="#333"/>
+  <text x="310" y="530" font-size="12" fill="#333">+ main()</text>
+  <text x="310" y="548" font-size="12" fill="#333">获取单例 → 创建节点 → init</text>
+  <text x="310" y="566" font-size="12" fill="#333">→ publish → shutdown</text>
+
+  <!-- Subscriber -->
+  <rect x="540" y="480" width="230" height="120" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="655" y="502" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Subscriber</text>
+  <line x1="540" y1="512" x2="770" y2="512" stroke="#333"/>
+  <text x="550" y="530" font-size="12" fill="#333">- topic : string</text>
+  <text x="550" y="548" font-size="12" fill="#333">+ init()</text>
+  <text x="550" y="566" font-size="12" fill="#333">+ shutdown()</text>
+  <text x="550" y="584" font-size="12" fill="#333">+ onMessage(Message)</text>
+
+  <!-- inheritance: Publisher -> Node -->
+  <line x1="145" y1="478" x2="326" y2="208" stroke="#2563eb" stroke-width="2" marker-end="url(#inh)"/>
+  <text x="185" y="330" font-size="12" fill="#2563eb">继承</text>
+
+  <!-- inheritance: Subscriber -> Node -->
+  <line x1="655" y1="478" x2="492" y2="208" stroke="#2563eb" stroke-width="2" marker-end="url(#inh)"/>
+  <text x="590" y="330" font-size="12" fill="#2563eb">继承</text>
+
+  <!-- Publisher -> RosCore : sendMessage -->
+  <line x1="262" y1="512" x2="296" y2="436" stroke="#d97706" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#call)"/>
+  <text x="288" y="468" text-anchor="end" font-size="12" fill="#d97706">调用 sendMessage()</text>
+
+  <!-- RosCore -> Subscriber : onMessage -->
+  <line x1="522" y1="398" x2="638" y2="474" stroke="#d97706" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#call)"/>
+  <text x="530" y="445" font-size="12" fill="#d97706">回调 onMessage()</text>
+
+  <!-- main -> RosCore -->
+  <line x1="410" y1="478" x2="410" y2="436" stroke="#d97706" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#call)"/>
+  <text x="418" y="462" font-size="12" fill="#d97706">使用</text>
+
+  <!-- Legend -->
+  <rect x="560" y="40" width="230" height="110" rx="4" fill="#fafafa" stroke="#999"/>
+  <text x="575" y="62" font-size="12" font-weight="bold" fill="#555">图例</text>
+  <line x1="575" y1="82" x2="625" y2="82" stroke="#2563eb" stroke-width="2" marker-end="url(#inh)"/>
+  <text x="640" y="86" font-size="12" fill="#555">继承（实线 + 空心三角）</text>
+  <line x1="575" y1="112" x2="625" y2="112" stroke="#d97706" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#call)"/>
+  <text x="640" y="116" font-size="12" fill="#555">调用 / 使用（虚线箭头）</text>
+  <text x="575" y="138" font-size="11" fill="#888">蓝线是谁是谁的子类；橙线是谁调用谁</text>
+</svg>
