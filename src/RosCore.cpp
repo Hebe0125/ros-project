@@ -35,6 +35,33 @@ void RosCore::registerSubscriber(const string& topic, Subscriber* s) {
     topic_subs[topic].push_back(s);   // 若该话题尚无记录则自动创建，再将订阅者加入列表
 }
 
+void RosCore::removeNode(Node* n) {
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (nodes[i] == n) {
+            nodes.erase(nodes.begin() + i);   // 从统一管理的名单中移除
+            Logger::log(LOG_INFO, "RosCore", "节点 " + n->getName() + " 已从核心移除");
+            return;
+        }
+    }
+    Logger::log(LOG_WARN, "RosCore", "尝试移除的节点 " + n->getName() + " 不在注册列表中");
+}
+
+void RosCore::unregisterSubscriber(const string& topic, Subscriber* s) {
+    auto it = topic_subs.find(topic);   // 查找该话题的订阅者列表
+    if (it == topic_subs.end()) {
+        Logger::log(LOG_WARN, "RosCore", "话题 " + topic + " 不存在，无法移除订阅者");
+        return;
+    }
+    vector<Subscriber*>& list = it->second;
+    for (size_t i = 0; i < list.size(); i++) {
+        if (list[i] == s) {
+            list.erase(list.begin() + i);   // 从映射表中移除，之后该话题的消息不再转发给它
+            return;
+        }
+    }
+    Logger::log(LOG_WARN, "RosCore", "该订阅者未订阅话题 " + topic + "，无法移除");
+}
+
 void RosCore::sendMessage(const string& topic, const string& content) {
     // 校验空消息：内容为空则抛出消息异常
     if (content.empty()) {

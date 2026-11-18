@@ -32,6 +32,12 @@ public:
     // 为指定话题添加一个订阅者
     void registerSubscriber(const std::string& topic, Subscriber* s);
 
+    // 运行中途移除一个已注册节点（动态增删节点）
+    void removeNode(Node* n);
+
+    // 将一个订阅者从指定话题的订阅列表中移除（动态增删节点）
+    void unregisterSubscriber(const std::string& topic, Subscriber* s);
+
     // 将消息转发给指定话题下的所有订阅者
     void sendMessage(const std::string& topic, const std::string& content);
 
