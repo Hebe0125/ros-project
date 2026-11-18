@@ -4,6 +4,7 @@
 #include "Subscriber.h"
 #include "Message.h"
 #include "Exceptions.h"
+#include "Logger.h"
 #include <iostream>
 
 using namespace std;
@@ -47,7 +48,7 @@ void RosCore::sendMessage(const string& topic, const string& content) {
     }
 
     Message msg(content);   // 将内容包装为 Message，时间戳在构造时自动生成
-    cout << "[RosCore] 话题 " << topic << " 收到消息，开始转发..." << endl;
+    Logger::log(LOG_INFO, "RosCore", "话题 " + topic + " 收到消息，开始转发...");
 
     auto& subs = topic_subs[topic];   // 取出该话题的订阅者列表
     for (size_t i = 0; i < subs.size(); i++) {
@@ -56,7 +57,12 @@ void RosCore::sendMessage(const string& topic, const string& content) {
 }
 
 void RosCore::shutdownAll() {
-    cout << "========= RosCore 统一关闭所有节点 =========" << endl;
+    if (nodes.empty()) {
+        Logger::log(LOG_WARN, "RosCore", "当前没有任何已注册节点，无需关闭");
+        return;
+    }
+    Logger::log(LOG_INFO, "RosCore", "统一关闭所有节点，共 "
+                + to_string(nodes.size()) + " 个");
     for (size_t i = 0; i < nodes.size(); i++) {
         nodes[i]->shutdown();   // 通过基类指针调用 shutdown，由各子类执行各自的关闭逻辑
     }
