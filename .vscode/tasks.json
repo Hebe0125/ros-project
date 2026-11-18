@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build ros",
+            "type": "shell",
+            "command": "C:/Program Files (x86)/Dev-Cpp/MinGW64/bin/g++.exe",
+            "args": ["-std=c++11", "-fexec-charset=GBK", "-g", "src/*.cpp", "-o", "ros.exe"],
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run ros",
+            "type": "shell",
+            "command": "./ros.exe",
+            "dependsOn": ["build ros"]
+        }
+    ]
+}
+//快捷键 Ctrl + Shift + B
