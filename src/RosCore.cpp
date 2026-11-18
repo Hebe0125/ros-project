@@ -3,6 +3,7 @@
 #include "Node.h"
 #include "Subscriber.h"
 #include "Message.h"
+#include "Exceptions.h"
 #include <iostream>
 
 using namespace std;
@@ -20,6 +21,12 @@ RosCore* RosCore::getInstance() {
 }
 
 void RosCore::registerNode(Node* n) {
+    // 校验重复注册：已存在同名节点则抛出节点异常
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (nodes[i]->getName() == n->getName()) {
+            throw NodeException("节点注册失败：节点名 \"" + n->getName() + "\" 已存在");
+        }
+    }
     nodes.push_back(n);
 }
 
@@ -28,6 +35,17 @@ void RosCore::registerSubscriber(const string& topic, Subscriber* s) {
 }
 
 void RosCore::sendMessage(const string& topic, const string& content) {
+    // 校验空消息：内容为空则抛出消息异常
+    if (content.empty()) {
+        throw MessageException("消息发布失败：消息内容不能为空");
+    }
+
+    // 校验话题是否存在：不存在则抛出话题异常
+    // 用 find 而不是 topic_subs[topic]，后者会给不存在的话题凭空创建一条空记录
+    if (topic_subs.find(topic) == topic_subs.end()) {
+        throw TopicException("消息转发失败：话题 \"" + topic + "\" 不存在");
+    }
+
     Message msg(content);   // 将内容包装为 Message，时间戳在构造时自动生成
     cout << "[RosCore] 话题 " << topic << " 收到消息，开始转发..." << endl;
 
