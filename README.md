@@ -8,6 +8,9 @@ C++ 课程大作业。基于发布/订阅（Pub/Sub）模型实现的轻量级�
 - 发布/订阅通信：发布者向话题发布消息，RosCore 根据话题与订阅者的映射关系，将消息转发给该话题下的所有订阅者，实现异步通信
 - 全生命周期运行：节点按流程完成初始化、消息交互、关闭
 - 异常处理：面对空节点名、重复节点注册、空消息发布、不存在话题转发等非法输入，抛出语义清晰的异常并捕获处理，程序禁止崩溃
+- 自定义消息类型：TempHumidityMessage 继承 Message 并重写 getContent，温湿度消息沿用同一条链路转发
+- 动态增删节点：支持运行中途注册新节点、移除已有节点，消息转发实时生效
+- 分级日志与持久化：Logger 统一输出 INFO/WARN/ERROR 三级日志，并同步写入 ros_log.txt 留存
 
 ## 项目结构
 
@@ -20,8 +23,11 @@ C++ 课程大作业。基于发布/订阅（Pub/Sub）模型实现的轻量级�
 | src/Subscriber.h / .cpp | 订阅者节点：继承 Node，onMessage() 接收消息 |
 | src/RosCore.h / .cpp | 核心单例：管理节点注册与话题-订阅者映射，负责消息转发与统一关闭 |
 | src/Exceptions.h | 自定义异常类：NodeException / TopicException / MessageException |
+| src/Logger.h / .cpp | 分级日志工具：INFO/WARN/ERROR 三级输出，支持持久化到文件 |
+| src/TempHumidityMessage.h | 自定义温湿度消息类型：继承 Message，重写 getContent |
 | src/main.cpp | 入口：功能演示与异常场景验证 |
 | .vscode/tasks.json | 一键编译运行配置 |
+
 ## 编译与运行
 
 1. 使用 VSCode 打开项目文件夹
@@ -30,4 +36,4 @@ C++ 课程大作业。基于发布/订阅（Pub/Sub）模型实现的轻量级�
 
 ## 涉及的主要 C++ 知识点
 
-封装（类与访问权限）、继承与多态（基类指针调用虚函数）、纯虚函数与抽象类、单例模式、STL 容器（map / vector）、异常处理（throw / try / catch）。
+封装（类与访问权限）、继承与多态（基类指针调用虚函数）、纯虚函数与抽象类、单例模式、STL 容器（map / vector）、异常处理（throw / try / catch）、文件流（ofstream 写日志文件）、字符串流（ostringstream 拼接自定义消息）。
