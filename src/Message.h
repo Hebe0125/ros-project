@@ -11,8 +11,9 @@ private:
 
 public:
     explicit Message(const std::string& msgData);  // 构造函数：传入消息内容
-    std::string getContent() const;    // 只读接口：取内容
-    std::string getTimeStamp() const;  // 只读接口：取时间戳
+    virtual ~Message() {}              // 虚析构函数：保证子类对象析构正确
+    virtual std::string getContent() const;    // 取内容（virtual：子类可重写为自定义格式）
+    std::string getTimeStamp() const;          // 只读接口：取时间戳
 };
 
 #endif

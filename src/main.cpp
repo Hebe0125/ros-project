@@ -1,10 +1,11 @@
 // main.cpp —— 程序入口
-// 演示内容：发布/订阅通信、多话题隔离、动态增删节点、异常处理、分级日志
+// 演示内容：发布/订阅通信、自定义消息类型、多话题隔离、动态增删节点、异常处理、分级日志
 #include <iostream>
 #include "Publisher.h"
 #include "Subscriber.h"
 #include "RosCore.h"
 #include "Exceptions.h"
+#include "TempHumidityMessage.h"
 #include "Logger.h"
 
 using namespace std;
@@ -27,6 +28,10 @@ int main() {
 
     cout << "\n--------- 正常消息发布 ---------" << endl;
     pub.publish("hello 1");
+
+    cout << "\n--------- 自定义消息类型：温湿度消息 ---------" << endl;
+    TempHumidityMessage th(25.5, 60.0);   // 加分项：自定义温湿度消息类型
+    pub.publish(th);                      // 沿用同一条发布/订阅链路，订阅者按温湿度格式收到
 
     cout << "\n--------- 话题 2：/battery（验证按话题隔离转发） ---------" << endl;
     battPub.publish("电量 85%");

@@ -9,6 +9,7 @@
 
 class Subscriber;
 class Node;      // 前向声明：本类只使用这两个类的指针，无需包含其完整定义
+class Message;   // 前向声明：sendMessage 重载使用其引用
 
 class RosCore {
 private:
@@ -40,6 +41,9 @@ public:
 
     // 将消息转发给指定话题下的所有订阅者
     void sendMessage(const std::string& topic, const std::string& content);
+
+    // 转发一个已构造好的消息对象（支持 Message 及其子类，如自定义消息类型）
+    void sendMessage(const std::string& topic, const Message& msg);
 
     // 遍历并统一关闭所有已注册节点
     void shutdownAll();

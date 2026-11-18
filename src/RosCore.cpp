@@ -67,19 +67,21 @@ void RosCore::sendMessage(const string& topic, const string& content) {
     if (content.empty()) {
         throw MessageException("消息发布失败：消息内容不能为空");
     }
+    sendMessage(topic, Message(content));   // 包装成消息对象后走统一转发
+}
 
+void RosCore::sendMessage(const string& topic, const Message& msg) {
     // 校验话题是否存在：不存在则抛出话题异常
     // 用 find 而不是 topic_subs[topic]，后者会给不存在的话题凭空创建一条空记录
     if (topic_subs.find(topic) == topic_subs.end()) {
         throw TopicException("消息转发失败：话题 \"" + topic + "\" 不存在");
     }
 
-    Message msg(content);   // 将内容包装为 Message，时间戳在构造时自动生成
     Logger::log(LOG_INFO, "RosCore", "话题 " + topic + " 收到消息，开始转发...");
 
     auto& subs = topic_subs[topic];   // 取出该话题的订阅者列表
     for (size_t i = 0; i < subs.size(); i++) {
-        subs[i]->onMessage(msg);      // 通过基类指针调用 onMessage，体现多态
+        subs[i]->onMessage(msg);      // msg 可能是 Message 或其子类，getContent 按实际类型执行（多态）
     }
 }
 
